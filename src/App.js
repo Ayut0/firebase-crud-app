@@ -1,7 +1,7 @@
 import './App.css';
 import {useState, useEffect, Fragment} from "react"
 import db from "./firebase/firebase"
-import { collection, getDocs, getFirestore, query, QuerySnapshot, doc, getDoc, onSnapshot, addDoc } from "firebase/firestore";
+import { collection, getDocs, getFirestore, query, QuerySnapshot, doc, getDoc, onSnapshot, addDoc, setDoc } from "firebase/firestore";
 import { async } from '@firebase/util';
 
 function App() {
@@ -42,12 +42,21 @@ function App() {
     console.log(e.target.elements)
     const {name, email} = e.target.elements;
     console.log(name.value, email.value);
+    //addDoc function: Store the data with auto generated ID
     const usersRef = query(collection(db, "users"));
     const documentRef = await addDoc(usersRef, {
       name: name.value,
       email: email.value
     });
     console.log(documentRef);
+
+    //setDoc function: Store the data with any ID you set
+    // const usersRef = query(doc(db, "users", 'ABCDEF'));
+    // const documentRef = await setDoc(usersRef, {
+    //   name: name.value,
+    //   email: email.value
+    // });
+    // console.log(documentRef);
   }
 
   console.log(users);
