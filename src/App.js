@@ -1,7 +1,7 @@
 import './App.css';
 import {useState, useEffect, Fragment} from "react"
 import db from "./firebase/firebase"
-import { collection, getDocs, getFirestore, query, QuerySnapshot, doc, getDoc, onSnapshot, addDoc, setDoc, Timestamp, serverTimestamp } from "firebase/firestore";
+import { collection, getDocs, getFirestore, query, QuerySnapshot, doc, getDoc, onSnapshot, addDoc, setDoc, Timestamp, serverTimestamp, deleteDoc, where } from "firebase/firestore";
 import { async } from '@firebase/util';
 
 function App() {
@@ -60,6 +60,23 @@ function App() {
     // console.log(documentRef);
   }
 
+  const deleteUserWithId = async (id)=>{
+    const usersRef = doc(db, 'users', id);
+    console.log(usersRef);
+    await deleteDoc(usersRef);
+  }
+
+  const deleteUserWithName = async (name) => {
+    const userRef = collection(db, 'users');
+    const q = query(userRef, where('name', '==', name));
+    const querySnapshot = await getDocs(q);
+    console.log(querySnapshot)
+    querySnapshot.forEach(async (document) => {
+      const userDocumentRef = doc(db, 'users', document.id);
+      await deleteDoc(userDocumentRef);
+    })
+  }
+
   console.log(users);
   return (
     <Fragment>
@@ -78,7 +95,13 @@ function App() {
       </form>
       <h2>User list</h2>
       <div className="App">
-        {users && users.map((user) => <div key={user.id}>{user.name}</div>)}
+        {users && users.map((user) =>(
+          <div key={user.id}>
+            <span>{user.name}</span>
+            <button onClick={() => deleteUserWithId(user.id)}>Delete with ID</button>
+            <button onClick={() => deleteUserWithName(user.name)}>Delete with where, name</button>
+          </div>
+        ))}
       </div>
     </Fragment>
   );
