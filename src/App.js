@@ -1,7 +1,7 @@
 import './App.css';
 import {useState, useEffect, Fragment} from "react"
 import db from "./firebase/firebase"
-import { collection, getDocs, getFirestore, query, QuerySnapshot, doc, getDoc, onSnapshot, addDoc, setDoc } from "firebase/firestore";
+import { collection, getDocs, getFirestore, query, QuerySnapshot, doc, getDoc, onSnapshot, addDoc, setDoc, Timestamp, serverTimestamp } from "firebase/firestore";
 import { async } from '@firebase/util';
 
 function App() {
@@ -46,7 +46,8 @@ function App() {
     const usersRef = query(collection(db, "users"));
     const documentRef = await addDoc(usersRef, {
       name: name.value,
-      email: email.value
+      email: email.value,
+      Timestamp: serverTimestamp(),
     });
     console.log(documentRef);
 
