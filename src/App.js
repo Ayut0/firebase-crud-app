@@ -1,7 +1,7 @@
 import './App.css';
 import {useState, useEffect, Fragment} from "react"
 import db from "./firebase/firebase"
-import { collection, getDocs, getFirestore, query, QuerySnapshot, doc, getDoc, onSnapshot, addDoc, setDoc, Timestamp, serverTimestamp, deleteDoc, where } from "firebase/firestore";
+import { collection, getDocs, getFirestore, query, QuerySnapshot, doc, getDoc, onSnapshot, addDoc, setDoc, Timestamp, serverTimestamp, deleteDoc, where, updateDoc } from "firebase/firestore";
 import { async } from '@firebase/util';
 
 function App() {
@@ -77,6 +77,13 @@ function App() {
     })
   }
 
+  const changeAdmin = async(id) =>{
+    const userDocumentRef = doc(db, 'users', id);
+    await updateDoc(userDocumentRef, {
+      admin: false,
+    });
+  };
+
   console.log(users);
   return (
     <Fragment>
@@ -100,6 +107,9 @@ function App() {
             <span>{user.name}</span>
             <button onClick={() => deleteUserWithId(user.id)}>Delete with ID</button>
             <button onClick={() => deleteUserWithName(user.name)}>Delete with where, name</button>
+            {user.admin && (
+              <button onClick={() => changeAdmin(user.id)}></button>
+            )}
           </div>
         ))}
       </div>
